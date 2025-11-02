@@ -1,74 +1,62 @@
-# 🌸 Iris Flower Classification using TensorFlow & Keras
-# Author: Harshad Nabisab Mull
-
-# Import required libraries
+# iris_model.py
 import tensorflow as tf
 from tensorflow import keras
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 import matplotlib.pyplot as plt
+import numpy as np
 
-# 1️⃣ Load and preprocess the data
+# Load Iris dataset
 iris = load_iris()
 X = iris.data
 y = iris.target.reshape(-1, 1)
 
-# Convert labels to one-hot encoding
+# One-hot encode labels
 encoder = OneHotEncoder(sparse_output=False)
 y = encoder.fit_transform(y)
 
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
+# Split into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# 2️⃣ Build the model
+# Build model
 model = keras.Sequential([
-    keras.layers.Input(shape=(4,)),          # 4 features in Iris dataset
+    keras.layers.Input(shape=(4,)),
     keras.layers.Dense(10, activation='relu'),
-    keras.layers.Dense(3, activation='softmax')  # 3 output classes
+    keras.layers.Dense(8, activation='relu'),
+    keras.layers.Dense(3, activation='softmax')
 ])
 
-# 3️⃣ Compile the model
-model.compile(
-    optimizer='adam',
-    loss='categorical_crossentropy',
-    metrics=['accuracy']
-)
+# Compile model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# 4️⃣ Train the model
-history = model.fit(
-    X_train, y_train,
-    epochs=50,
-    validation_split=0.2,
-    verbose=1
-)
+# Train model
+print("\n🚀 Training the model...")
+history = model.fit(X_train, y_train, epochs=50, batch_size=8, verbose=0, validation_split=0.2)
 
-# 5️⃣ Evaluate the model
-test_loss, test_acc = model.evaluate(X_test, y_test)
-print(f"\n✅ Test Accuracy: {test_acc * 100:.2f}%")
+# Evaluate model
+loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
+print(f"\n✅ Model accuracy: {accuracy * 100:.2f}%")
 
-# 6️⃣ Plot accuracy and loss graphs
-plt.figure(figsize=(10,4))
+# Make a prediction
+sample = np.array([[5.1, 3.5, 1.4, 0.2]])
+prediction = model.predict(sample)
+predicted_class = iris.target_names[np.argmax(prediction)]
+print(f"🌸 Predicted class: {predicted_class}")
 
-# Accuracy plot
-plt.subplot(1, 2, 1)
-plt.plot(history.history['accuracy'], label='Train Accuracy')
+# 📊 Plot accuracy and loss
+plt.figure(figsize=(8, 5))
+plt.plot(history.history['accuracy'], label='Training Accuracy')
 plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-plt.title('Model Accuracy')
+plt.plot(history.history['loss'], label='Training Loss', linestyle='--')
+plt.plot(history.history['val_loss'], label='Validation Loss', linestyle='--')
+plt.title('Training Accuracy and Loss')
 plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
+plt.ylabel('Value')
 plt.legend()
+plt.grid(True)
 
-# Loss plot
-plt.subplot(1, 2, 2)
-plt.plot(history.history['loss'], label='Train Loss')
-plt.plot(history.history['val_loss'], label='Validation Loss')
-plt.title('Model Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.legend()
-
-plt.tight_layout()
+# Save the graph as an image file
+plt.savefig("training_plot.png")
+print("\n📸 Saved training graph as 'training_plot.png'")
 plt.show()
