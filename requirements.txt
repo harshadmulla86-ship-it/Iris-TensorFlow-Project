@@ -1,0 +1,37 @@
+# Iris TensorFlow Project
+
+This project classifies iris flowers using a TensorFlow neural network.
+
+## Setup Instructions
+
+### Windows (PowerShell)
+```powershell
+py -3.11 -m venv venv
+.\venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python iris_model.py
+
+
+//Linux / Mac (Bash)
+python3.11 -m venv venv
+source venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python iris_model.py
+
+
+
+---
+
+### ✅ Summary
+- **Code files** go in the root or a `src/` folder.
+- **Notes / instructions** go in `README.md`.
+- **Dependencies** go in `requirements.txt`.
+- **Sample outputs** (plots, images) stay in the root or a separate `assets/` folder.
+
+---
+
+If you want, I can **write a full ready-to-paste `README.md`** for your repo including setup, notes, and example output so your GitHub looks fully professional.  
+
+Do you want me to do that?
